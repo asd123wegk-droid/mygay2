@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>สิ่งที่ต้องทำ</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        padding: 20px;
+        font-size: 18px; /* ขนาดตัวอักษรใหญ่ขึ้น */
+    }
+
+    .box {
+        background: white;
+        max-width: 500px; /* กล่องใหญ่ขึ้น */
+        margin: auto;
+        padding: 30px; /* padding เพิ่มขึ้น */
+        border-radius: 10px;
+    }
+
+    input[type="text"] {
+        width: 70%; /* input กว้างขึ้น */
+        padding: 12px; /* สูงขึ้นและใหญ่ขึ้น */
+        font-size: 18px; /* ตัวอักษรใหญ่ */
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 12px 20px; /* ปุ่มใหญ่ขึ้น */
+        font-size: 18px; /* ตัวอักษรใหญ่ */
+        margin-left: 8px;
+        cursor: pointer;
+    }
+
+    li {
+        list-style: none;
+        margin: 10px 0;
+        font-size: 20px; /* ตัวอักษรใหญ่ขึ้นในรายการ */
+    }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>สิ่งที่ต้องทำ</h2>
+
+    <input type="text" id="titleInput" placeholder="เพิ่มรายการ">
+    <button onclick="เพิ่ม()">เพิ่ม</button>
+
+    <ul id="output"></ul>
+</div>
+
+<script>
+    class สิ่งที่ต้องทำ {
+        constructor() {
+            this.รายการ = [];
+            this.idถัดไป = 1;
+        }
+
+        เพิ่ม(ชื่อ) {
+            this.รายการ.push({
+                id: this.idถัดไป++,
+                ชื่อ: ชื่อ,
+                เสร็จแล้ว: false
+            });
+        }
+
+        สลับสถานะ(id) {
+            const งาน = this.รายการ.find(t => t.id === id);
+            if (งาน) {
+                งาน.เสร็จแล้ว = !งาน.เสร็จแล้ว;
+            }
+        }
+
+        ลบ(id) {
+            this.รายการ = this.รายการ.filter(t => t.id !== id);
+        }
+
+        ทั้งหมด() {
+            return this.รายการ;
+        }
+    }
+
+    const แอป = new สิ่งที่ต้องทำ();
+
+    function เพิ่ม() {
+        const input = document.getElementById("titleInput");
+        if (input.value.trim() === "") return;
+
+        แอป.เพิ่ม(input.value);
+        input.value = "";
+        แสดงผล();
+    }
+
+    function สลับ(id) {
+        แอป.สลับสถานะ(id);
+        แสดงผล();
+    }
+
+    function ลบ(id) {
+        แอป.ลบ(id);
+        แสดงผล();
+    }
+
+    function แสดงผล() {
+        const ul = document.getElementById("output");
+        ul.innerHTML = "";
+
+        แอป.ทั้งหมด().forEach(งาน => {
+            const li = document.createElement("li");
+
+            li.innerHTML = `
+                <input type="checkbox"
+                    ${งาน.เสร็จแล้ว ? "checked" : ""}
+                    onclick="สลับ(${งาน.id})">
+
+                ${งาน.เสร็จแล้ว ? "<s>" : ""}${งาน.ชื่อ}${งาน.เสร็จแล้ว ? "</s>" : ""}
+
+                <button onclick="ลบ(${งาน.id})">ลบ</button>
+            `;
+
+            ul.appendChild(li);
+        });
+    } 
+</script>
+
+</body>
+</html>
